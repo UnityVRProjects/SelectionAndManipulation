@@ -1,0 +1,34 @@
+{
+    "name": "Teleport",
+    "maps": [
+        {
+            "name": "New action map",
+            "id": "cd6185a9-7930-4d91-8e14-ba770379d74e",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "2d1288cb-ebc3-4550-816c-acf3b47b727e",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "71e97bfa-0cdc-4afa-9cb1-9ddf2089aec4",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
