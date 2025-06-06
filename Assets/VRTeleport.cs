@@ -51,12 +51,13 @@ public class VRTeleport : MonoBehaviour
 
                 teleportMarker.SetActive(true);
                 teleportMarker.transform.position = destination;
-            
+
 
             if (teleportAction.action.WasPressedThisFrame())
             {
                 Debug.Log("pressed");
                 Teleport();
+                
             }
         }
         else

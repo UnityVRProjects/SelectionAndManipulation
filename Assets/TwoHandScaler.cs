@@ -3,11 +3,14 @@ using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
 public class TwoHandRayScalerRotator : UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable
+
 {
     private List<UnityEngine.XR.Interaction.Toolkit.Interactors.IXRSelectInteractor> grabInteractors = new List<UnityEngine.XR.Interaction.Toolkit.Interactors.IXRSelectInteractor>();
     private float initialDistance;
     private Vector3 initialScale;
     private Quaternion initialRotationOffset;
+
+    [SerializeField] private Transform scaleTarget;
 
     private Transform firstInteractorTransform => grabInteractors[0].transform;
     private Transform secondInteractorTransform => grabInteractors[1].transform;
@@ -21,8 +24,9 @@ public class TwoHandRayScalerRotator : UnityEngine.XR.Interaction.Toolkit.Intera
         if (grabInteractors.Count == 2)
         {
             Debug.Log("Understands theres 2 interactors");
+            initialScale = scaleTarget.localScale;
+
             initialDistance = Vector3.Distance(firstInteractorTransform.position, secondInteractorTransform.position);
-            initialScale = transform.localScale;
 
             Vector3 direction = secondInteractorTransform.position - firstInteractorTransform.position;
             initialRotationOffset = Quaternion.Inverse(Quaternion.LookRotation(direction)) * transform.rotation;
@@ -39,11 +43,13 @@ public class TwoHandRayScalerRotator : UnityEngine.XR.Interaction.Toolkit.Intera
     {
         if (grabInteractors.Count == 2)
         {
-            Debug.Log("Should be working");
             // As of now, this doesn't do anything, it selects one object and rotates it.
             float currentDistance = Vector3.Distance(firstInteractorTransform.position, secondInteractorTransform.position);
-            float scaleFactor = currentDistance / initialDistance;
-            transform.localScale = initialScale * scaleFactor;
+            Debug.Log($"Initial: {initialDistance}, Current: {currentDistance}");
+
+            float scaleFactor = (currentDistance / initialDistance) * (currentDistance / initialDistance);
+            Debug.Log($"Scale factor: {scaleFactor}");
+            scaleTarget.localScale = initialScale * scaleFactor;
 
             Vector3 currentDirection = secondInteractorTransform.position - firstInteractorTransform.position;
             Quaternion targetRotation = Quaternion.LookRotation(currentDirection) * initialRotationOffset;
@@ -54,6 +60,11 @@ public class TwoHandRayScalerRotator : UnityEngine.XR.Interaction.Toolkit.Intera
     public override bool IsSelectableBy(UnityEngine.XR.Interaction.Toolkit.Interactors.IXRSelectInteractor interactor)
     {
         // Allow up to 2 interactors (even if they are both ray-based)
-        return base.IsSelectableBy(interactor) && grabInteractors.Count < 2;
+        return base.IsSelectableBy(interactor) &&
+           (grabInteractors.Count < 2 || grabInteractors.Contains(interactor));
     }
+
+    void Start() {
+        if (scaleTarget == null) scaleTarget = transform; // fallback if not assigned
+    }   
 }
