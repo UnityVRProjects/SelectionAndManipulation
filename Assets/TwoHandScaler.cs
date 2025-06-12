@@ -43,17 +43,13 @@ public class TwoHandRayScalerRotator : UnityEngine.XR.Interaction.Toolkit.Intera
     {
         if (grabInteractors.Count == 2)
         {
-            // As of now, this doesn't do anything, it selects one object and rotates it.
             float currentDistance = Vector3.Distance(firstInteractorTransform.position, secondInteractorTransform.position);
-            Debug.Log($"Initial: {initialDistance}, Current: {currentDistance}");
-
-            float scaleFactor = (currentDistance / initialDistance) * (currentDistance / initialDistance);
-            Debug.Log($"Scale factor: {scaleFactor}");
+            float scaleFactor = Mathf.Clamp(currentDistance / initialDistance, 0.1f, 5f);
+            //scaleTarget.localScale = initialScale * scaleFactor;
             scaleTarget.localScale = initialScale * scaleFactor;
+            Debug.Log($"Scaling with factor {scaleFactor}");
+            Debug.Log($"New Scale: {scaleTarget.localScale}");
 
-            Vector3 currentDirection = secondInteractorTransform.position - firstInteractorTransform.position;
-            Quaternion targetRotation = Quaternion.LookRotation(currentDirection) * initialRotationOffset;
-            transform.rotation = targetRotation;
         }
     }
 
